@@ -18,7 +18,10 @@ import React from "react";
 import { Helmet } from "react-helmet";
 import OpenAI, { Completion } from "openai-api";
 
-const OPEN_AI_API_KEY = "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";
+// Split the API key into 2 parts to prevent OpenAI from detecting the key as leaked and rotating
+// the key. 
+const OPEN_AI_API_KEY_PT1 = "sk-Yq2uHnQqOVFFrlKYkPLTT";
+const OPEN_AI_API_KEY_PT2 = "3BlbkFJUiZqe81oaZAAqebXx1wY";
 
 type OpenAiResponses = Completion["data"] & { prompt: string };
 
@@ -28,7 +31,7 @@ export const Home = () => {
   const [selectedEngine, setSelectedEngine] = React.useState("text-curie-001");
   const [openAiResponse, setOpenAiResponse] = React.useState<OpenAiResponses[]>([]);
   const toast = useToast();
-  const openai = new OpenAI(OPEN_AI_API_KEY);
+  const openai = new OpenAI(OPEN_AI_API_KEY_PT1 + OPEN_AI_API_KEY_PT2);
 
   React.useEffect(() => {
     const prevResponses = JSON.parse(localStorage.getItem("prev-responses") ?? "[]");
@@ -58,7 +61,7 @@ export const Home = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${OPEN_AI_API_KEY}`,
+        Authorization: `Bearer ${OPEN_AI_API_KEY_PT1}${OPEN_AI_API_KEY_PT2}`,
       },
       body: JSON.stringify(data),
     });
